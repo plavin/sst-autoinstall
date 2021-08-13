@@ -25,16 +25,16 @@ echo export PATH=$INSTALLDIR/bin:'$PATH' >> $DEFFILE
 
 echo "Installing autotools"
 
-mkdir -p source/autotools
-cp install_autotools.sh source/autotools/
-cd source/autotools/
+mkdir -p $SRCDIR/autotools
+cp install_autotools.sh $SRCDIR/autotools/
+cd $SRCDIR/autotools/
 PREFIX=$INSTALLDIR ./install_autotools.sh
 cd $TOP
 
 echo "Installing Pin 3"
 
-mkdir -p install/packages/pin
-cd install/packages/pin
+mkdir -p $INSTALLDIR/packages/pin
+cd $INSTALLDIR/packages/pin
 wget $PINURL
 tar xvzf *.tar.gz
 PIN_HOME=$PWD/$(ls -d */)
@@ -56,13 +56,13 @@ git clone $COREREPO
 cd sst-core
 ./autogen.sh
 ./configure --prefix=$SST_CORE_HOME --disable-mpi
-make all
+make all -j8
 make install
 cd $TOP
 
 # Install Cmake
-mkdir -p source/cmake
-cd source/cmake
+mkdir -p $SRCDIR/cmake
+cd $SRCDIR/cmake
 wget $CMAKEURL
 tar xzf *.tar.gz
 cd $(ls -d */)
@@ -71,12 +71,11 @@ cp -r share/* $INSTALLDIR/share/
 cd $TOP
 
 # Install DramSIM3
-mkdir source
+mkdir $SRCDIR
+cd $SRCDIR
 git clone $DRAMSIM3REPO
-cd DramSIM3
-mkdir build
-cd build
-cmake ..
+cd DRAMsim3
+cmake .
 make -j8
 DRAMDIR=$PWD
 cd $TOP
@@ -95,7 +94,7 @@ git clone $ELEMENTSREPO
 cd sst-elements
 ./autogen.sh
 ./configure --prefix=$SST_ELEMENTS_HOME --with-sst-core=$SST_CORE_HOME --with-pin=$PIN_HOME --with-dramsim3=$DRAMDIR
-#make all
+#make all -j8
 #make install
 cd $TOP
 
