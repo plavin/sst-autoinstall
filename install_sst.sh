@@ -92,10 +92,12 @@ mkdir -p $SRCDIR
 cd $SRCDIR
 git clone $ELEMENTSREPO
 cd sst-elements
+# Remove Werror lmao
+find . -name Makefile.am -exec sed -i s'/-Werror//g' {} \;
 ./autogen.sh
 ./configure --prefix=$SST_ELEMENTS_HOME --with-sst-core=$SST_CORE_HOME --with-pin=$PIN_HOME --with-dramsim3=$DRAMDIR
-#make all -j8
-#make install
+make all -j8
+make install
 cd $TOP
 
 echo "Done"
